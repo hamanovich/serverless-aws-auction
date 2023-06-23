@@ -11,13 +11,12 @@ provider:
     AUCTIONS_TABLE_NAME: ${self:custom.AuctionsTable.name}
   iam:
     role:
-      statements:
-        ${file(iam/AuctionsTableIAM.yml):AuctionsTableIAM}
-        
+      statements: ${file(iam/AuctionsTableIAM.yml):AuctionsTableIAM}
+
 resources:
   Resources:
     AuctionsTable: ${file(resources/AuctionsTable.yml):AuctionsTable}
-    
+
 functions:
   createAuction:
     handler: src/handlers/createAuction.handler
@@ -39,9 +38,9 @@ functions:
       - http:
           method: GET
           path: auction/{id}
-          request: 
-            parameters: 
-              paths: 
+          request:
+            parameters:
+              paths:
                 id: true
 
   placeBid:
@@ -50,12 +49,17 @@ functions:
       - http:
           method: PATCH
           path: auction/{id}/bid
-          request: 
-            parameters: 
-              paths: 
+          request:
+            parameters:
+              paths:
                 id: true
+
+  processAuctions:
+    handler: src/handlers/processAuctions.handler
+    events:
+      - schedule: rate(1 minute)
 
 custom:
   AuctionsTable:
     name: !Ref AuctionsTable
-    arn:  !GetAtt AuctionsTable.Arn
+    arn: !GetAtt AuctionsTable.Arn

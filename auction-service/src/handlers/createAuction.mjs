@@ -1,7 +1,7 @@
-import { v4 as uuid } from "uuid";
-import AWS from "aws-sdk";
-import createError from "http-errors";
-import commonMiddleware from "../utils/middleware.mjs";
+import { v4 as uuid } from 'uuid';
+import AWS from 'aws-sdk';
+import createError from 'http-errors';
+import commonMiddleware from '../utils/middleware.mjs';
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
@@ -12,7 +12,7 @@ async function createAuction(event) {
   const auction = {
     id: uuid(),
     title,
-    status: "ACTIVE",
+    status: 'ACTIVE',
     createdAt: now.toISOString(),
     highestBid: {
       amount: 0,
