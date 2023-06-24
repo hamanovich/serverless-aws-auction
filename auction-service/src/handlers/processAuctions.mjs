@@ -1,5 +1,7 @@
+import { getEndedAuctions } from '../utils/getEndedAuctions.mjs';
+
 async function processAuctions() {
-  console.log('processing auctions');
+  await getEndedAuctions();
 }
 
 export const handler = processAuctions;
