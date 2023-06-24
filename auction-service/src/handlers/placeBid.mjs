@@ -1,9 +1,9 @@
 import AWS from 'aws-sdk';
-import createError from 'http-errors';
+import createHttpError from 'http-errors';
 import validator from '@middy/validator';
 import placeBidSchema from '../schemas/placeBidSchema.mjs';
 import commonMiddleware from '../utils/middleware.mjs';
-import { getAuctionById } from './getAuction.mjs';
+import { getAuctionById } from '../utils/getAuctionById.mjs';
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
@@ -15,8 +15,8 @@ async function placeBid(event) {
   const auction = await getAuctionById(id);
   const { amount: currentAmount } = auction.highestBid;
 
-  if (auction.status !== 'ACTIVE') throw new createError.Forbidden(`You can't bid on close auctions`);
-  if (amount <= currentAmount) throw new createError.Forbidden(`Your bid must be hight than ${currentAmount}`);
+  if (auction.status !== 'ACTIVE') throw new createHttpError.Forbidden(`You can't bid on close auctions`);
+  if (amount <= currentAmount) throw new createHttpError.Forbidden(`Your bid must be hight than ${currentAmount}`);
 
   try {
     const { Attributes } = await dynamodb
@@ -33,7 +33,7 @@ async function placeBid(event) {
 
     updateAuction = Attributes;
   } catch (error) {
-    throw new createError.InternalServerError(error);
+    throw new createHttpError.InternalServerError(error);
   }
 
   return {
@@ -42,7 +42,7 @@ async function placeBid(event) {
   };
 }
 
-export const handler = commonMiddleware(placeBid).use(
+export default commonMiddleware(placeBid).use(
   validator({
     eventSchema: placeBidSchema,
   }),

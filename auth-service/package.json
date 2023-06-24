@@ -1,7 +1,7 @@
 {
-  "name": "auction-service",
+  "name": "auth-service",
   "version": "1.0.0",
-  "description": "Auction service for API Gateway",
+  "description": "Auth service for API Gateway",
   "scripts": {
     "package:build": "sls package",
     "deploy": "sls deploy --verbose",
@@ -10,17 +10,15 @@
   },
   "author": "Siarhei Hamanovich <dev.hamanovich@gmail.com>",
   "license": "ISC",
+  "devDependencies": {
+    "prettier": "^2.8.8"
+  },
   "dependencies": {
     "@middy/core": "^4.5.2",
     "@middy/http-error-handler": "^4.5.2",
     "@middy/http-event-normalizer": "^4.5.2",
     "@middy/http-json-body-parser": "^4.5.2",
-    "@middy/validator": "^4.5.2",
-    "aws-sdk": "^2.1403.0",
     "http-errors": "^2.0.0",
-    "uuid": "^9.0.0"
-  },
-  "devDependencies": {
-    "prettier": "^2.8.8"
+    "jsonwebtoken": "^9.0.0"
   }
 }

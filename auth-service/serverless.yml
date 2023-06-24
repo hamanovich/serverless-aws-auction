@@ -1,0 +1,38 @@
+service: auth-service
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: eu-central-1
+  memorySize: 256
+  stage: ${opt:stage, 'dev'}
+  environment:
+    AUTH0_PUBLIC_KEY: ${file(secret.pem)}
+  httpApi:
+    cors: true
+
+resources:
+  Resources:
+    GatewayResponse: ${file(resources/GatewayResponse.yml):GatewayResponse}
+    AuthFailureGatewayResponse: ${file(resources/AuthFailureGatewayResponse.yml):AuthFailureGatewayResponse}
+
+functions:
+  auth:
+    handler: handler.auth
+
+  publicEndpoint:
+    handler: handler.publicEndpoint
+    events:
+      - http:
+          method: POST
+          path: public
+
+  privateEndpoint:
+    handler: handler.privateEndpoint
+    events:
+      - http:
+          method: POST
+          path: private
+          authorizer:
+            name: auth

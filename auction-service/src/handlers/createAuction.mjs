@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 import AWS from 'aws-sdk';
-import createError from 'http-errors';
+import createHttpError from 'http-errors';
 import validator from '@middy/validator';
 import createAuctionSchema from '../schemas/createAuctionSchema.mjs';
 import commonMiddleware from '../utils/middleware.mjs';
@@ -32,7 +32,7 @@ async function createAuction(event) {
       })
       .promise();
   } catch (error) {
-    throw new createError.InternalServerError(error);
+    throw new createHttpError.InternalServerError(error);
   }
 
   return {
@@ -41,7 +41,7 @@ async function createAuction(event) {
   };
 }
 
-export const handler = commonMiddleware(createAuction).use(
+export default commonMiddleware(createAuction).use(
   validator({
     eventSchema: createAuctionSchema,
   }),

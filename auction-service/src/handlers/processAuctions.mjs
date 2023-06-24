@@ -1,4 +1,4 @@
-import createError from 'http-errors';
+import createHttpError from 'http-errors';
 import { getEndedAuctions } from '../utils/getEndedAuctions.mjs';
 import { closeAuction } from '../utils/closeAuction.mjs';
 
@@ -11,8 +11,8 @@ async function processAuctions() {
 
     return { closed: closePromises.length };
   } catch (error) {
-    throw new createError.InternalServerError(error);
+    throw new createHttpError.InternalServerError(error);
   }
 }
 
-export const handler = processAuctions;
+export default processAuctions;

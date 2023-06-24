@@ -1,5 +1,5 @@
 import AWS from 'aws-sdk';
-import createError from 'http-errors';
+import createHttpError from 'http-errors';
 import validator from '@middy/validator';
 import getAuctionsSchema from '../schemas/getAuctionsSchema.mjs';
 import commonMiddleware from '../utils/middleware.mjs';
@@ -27,7 +27,7 @@ async function getAuctions(event) {
 
     auctions = Items;
   } catch (error) {
-    throw new createError.InternalServerError(error);
+    throw new createHttpError.InternalServerError(error);
   }
 
   return {
@@ -36,7 +36,7 @@ async function getAuctions(event) {
   };
 }
 
-export const handler = commonMiddleware(getAuctions).use(
+export default commonMiddleware(getAuctions).use(
   validator({
     eventSchema: getAuctionsSchema,
     ajvOptions: {
