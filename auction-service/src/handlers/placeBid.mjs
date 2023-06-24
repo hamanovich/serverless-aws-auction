@@ -1,5 +1,7 @@
 import AWS from 'aws-sdk';
 import createError from 'http-errors';
+import validator from '@middy/validator';
+import placeBidSchema from '../schemas/placeBidSchema.mjs';
 import commonMiddleware from '../utils/middleware.mjs';
 import { getAuctionById } from './getAuction.mjs';
 
@@ -13,6 +15,7 @@ async function placeBid(event) {
   const auction = await getAuctionById(id);
   const { amount: currentAmount } = auction.highestBid;
 
+  if (auction.status !== 'ACTIVE') throw new createError.Forbidden(`You can't bid on close auctions`);
   if (amount <= currentAmount) throw new createError.Forbidden(`Your bid must be hight than ${currentAmount}`);
 
   try {
@@ -39,4 +42,8 @@ async function placeBid(event) {
   };
 }
 
-export const handler = commonMiddleware(placeBid);
+export const handler = commonMiddleware(placeBid).use(
+  validator({
+    eventSchema: placeBidSchema,
+  }),
+);
