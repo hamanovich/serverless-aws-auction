@@ -1,0 +1,20 @@
+{
+  "name": "notification-service",
+  "version": "1.0.0",
+  "description": "Notification service for API Gateway",
+  "scripts": {
+    "package:build": "sls package",
+    "deploy": "sls deploy --verbose",
+    "deploy:prod": "sls deploy --stage prod",
+    "format": "prettier \"**/*.+(js|json|yml)\" --write"
+  },
+  "author": "Siarhei Hamanovich <dev.hamanovich@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "prettier": "^2.8.8"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.1404.0",
+    "pino": "^8.14.1"
+  }
+}

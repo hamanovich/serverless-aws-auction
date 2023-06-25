@@ -2,7 +2,7 @@ import AWS from 'aws-sdk';
 import createHttpError from 'http-errors';
 import validator from '@middy/validator';
 import getAuctionsSchema from '../schemas/getAuctionsSchema.mjs';
-import commonMiddleware from '../utils/middleware.mjs';
+import commonMiddleware from '../libs/middleware.mjs';
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 

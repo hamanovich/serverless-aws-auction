@@ -3,7 +3,8 @@ import AWS from 'aws-sdk';
 import createHttpError from 'http-errors';
 import validator from '@middy/validator';
 import createAuctionSchema from '../schemas/createAuctionSchema.mjs';
-import commonMiddleware from '../utils/middleware.mjs';
+import commonMiddleware from '../libs/middleware.mjs';
+import logger from '../libs/logger.mjs';
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
@@ -34,6 +35,7 @@ async function createAuction(event) {
       })
       .promise();
   } catch (error) {
+    logger.error(error, 'Auction was not created!');
     throw new createHttpError.InternalServerError(error);
   }
 

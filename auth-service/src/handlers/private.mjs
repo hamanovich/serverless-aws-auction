@@ -1,4 +1,4 @@
-import commonMiddleware from '../utils/middleware.mjs';
+import commonMiddleware from '../libs/middleware.mjs';
 
 async function privateEndpoint(event, context) {
   return {

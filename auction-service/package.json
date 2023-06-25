@@ -18,6 +18,7 @@
     "@middy/validator": "^4.5.2",
     "aws-sdk": "^2.1403.0",
     "http-errors": "^2.0.0",
+    "pino": "^8.14.1",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
