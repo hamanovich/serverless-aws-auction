@@ -9,11 +9,11 @@ import logger from '../libs/logger.mjs';
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
 async function createAuction(event) {
-  const { title } = event.body;
+  const { title, duration = 1 } = event.body;
   const { email: seller } = event.requestContext.authorizer;
   const now = new Date();
   const endDate = new Date();
-  endDate.setHours(now.getHours() + 1);
+  endDate.setHours(now.getHours() + duration);
 
   const auction = {
     id: uuid(),

@@ -9,6 +9,9 @@ export default transpileSchema({
         title: {
           type: 'string',
         },
+        duration: {
+          type: 'number',
+        },
       },
       required: ['title'],
     },

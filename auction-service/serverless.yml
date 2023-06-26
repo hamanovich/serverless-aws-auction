@@ -10,16 +10,22 @@ provider:
   environment:
     AUCTIONS_TABLE_NAME: ${self:custom.AuctionsTable.name}
     MAIL_QUEUE_URL: ${self:custom.MailQueue.url}
+    AUCTIONS_BUCKET_NAME: ${self:custom.AuctionsBucket.name}
     STAGE: ${self:provider.stage}
   iam:
     role:
-      statements: 
+      statements:
         - ${file(iam/AuctionsTableIAM.yml):AuctionsTableIAM}
         - ${file(iam/MailQueueIAM.yml):MailQueueIAM}
+        - ${file(iam/AuctionsBucketIAM.yml):AuctionsBucketIAM}
+  httpApi:
+    cors: true
 
 resources:
   Resources:
     AuctionsTable: ${file(resources/AuctionsTable.yml):AuctionsTable}
+    AuctionsBucket: ${file(resources/AuctionsBucket.yml):AuctionsBucket}
+    AuctionsBucketPolicy: ${file(resources/AuctionsBucket.yml):AuctionsBucketPolicy}
 
 functions:
   createAuction:
@@ -62,10 +68,22 @@ functions:
                 id: true
           authorizer: ${self:custom.authorizer}
 
+  uploadPicture:
+    handler: handler.uploadPicture
+    events:
+      - http:
+          method: PATCH
+          path: auction/{id}/picture
+          request:
+            parameters:
+              paths:
+                id: true
+          authorizer: ${self:custom.authorizer}
+
   processAuctions:
     handler: handler.processAuctions
-    # events:
-    #   - schedule: rate(1 minute)
+    events:
+      - schedule: rate(1 minute)
 
 custom:
   authorizer: arn:aws:lambda:${aws:region}:${aws:accountId}:function:auth-service-${self:provider.stage}-auth
@@ -75,3 +93,5 @@ custom:
   MailQueue:
     arn: ${cf:notification-service-${self:provider.stage}.MailQueueArn}
     url: ${cf:notification-service-${self:provider.stage}.MailQueueUrl}
+  AuctionsBucket:
+    name: auctions-bucket-h2m2n0-${self:provider.stage}
